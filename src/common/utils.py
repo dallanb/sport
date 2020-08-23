@@ -1,3 +1,5 @@
+import os
+import json
 import uuid as UUID
 from time import time
 
@@ -21,3 +23,8 @@ def generate_uuid():
 
 def camel_to_snake(s):
     return ''.join(['_' + c.lower() if c.isupper() else c for c in s]).lstrip('_')
+
+
+def get_sport_template(sport):
+    with open(os.path.join('src', 'templates', sport, 'data_model.json')) as f:
+        return json.load(f)
