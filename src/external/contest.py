@@ -1,14 +1,13 @@
-from .. import app
+import logging
 
 from . import Base
+from .. import app
 
 
 class Contest(Base):
     def __init__(self):
         Base.__init__(self)
-        self.host = app.config['CONTEST_HOST']
-        self.port = app.config['CONTEST_PORT']
-        self.base_url = f'http://{self.host}:{self.port}'
+        self.base_url = app.config['CONTEST_URL']
 
     def get_contest(self, uuid, params=None):
         url = f'{self.base_url}/contests/{uuid}'

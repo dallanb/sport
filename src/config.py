@@ -9,13 +9,10 @@ class Config(object):
     TESTING = os.getenv("TESTING", False)
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite://")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    KAFKA_HOST = os.getenv("KAFKA_HOST")
-    KAFKA_PORT = os.getenv("KAFKA_PORT")
+    KAFKA_URL = os.getenv("KAFKA_URL")
     KAFKA_TOPICS = os.getenv("KAFKA_TOPICS").split(",")
-    CONTEST_HOST = os.getenv("CONTEST_HOST")
-    CONTEST_PORT = os.getenv("CONTEST_PORT")
-    SCORE_HOST = os.getenv("SCORE_HOST")
-    SCORE_PORT = os.getenv("SCORE_PORT")
+    CONTEST_URL = os.getenv("CONTEST_URL")
+    SCORE_URL = os.getenv("SCORE_URL")
     REDIS_CONFIG = {
         'CACHE_TYPE': 'redis',
         'CACHE_REDIS_HOST': os.getenv("CACHE_HOST"),

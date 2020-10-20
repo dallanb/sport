@@ -29,8 +29,8 @@ class Sport(Base):
             sports = self.find(uuid=contest['sport']['sport_uuid'])
             participants = [participant['user_uuid'] for participant in contest['participants']]
             sheet = self.generate_sheet(name=sports.items[0].name, participants=participants)
-            score_res = self.score_external.get_contests(params={'contest_uuid': contest["uuid"]})
-            score_uuid = score_res['data']['contests'][0]['score_uuid']
+            score_res = self.score_external.get_score(uuid=contest["uuid"])
+            score_uuid = score_res['data']['scores']['uuid']
             _ = self.score_external.create_log(uuid=score_uuid, json={'sheet': sheet})
 
     @staticmethod

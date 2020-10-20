@@ -30,39 +30,18 @@ services:
       - ${HUNCHO_DIR}/env/dev/.env.sport
     healthcheck:
       test: curl --fail -s sport:5000/ping || exit 1
-      interval: 60s
+      interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - 20006:5000
     depends_on:
-      - sport_cache
       - sport_db
-    networks:
-      - app-net
-  sport_cache:
-    container_name: sport_cache
-    build:
-      context: ${HUNCHO_DIR}/services/redis
-      dockerfile: ${HUNCHO_DIR}/services/redis/build/Dockerfile
-    restart: unless-stopped
-    volumes:
-      - ${HUNCHO_DIR}/data/dev/sport_cache/redis_data:/var/lib/redis
-      - ${HUNCHO_DIR}/data/dev/sport_cache/redis.conf:/usr/local/etc/redis/redis.conf
-    env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.sport_cache
-    healthcheck:
-      test: ["CMD", "redis-cli","ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     networks:
       - app-net
   sport_db:
     container_name: sport_db
-    build:
-      context: ${HUNCHO_DIR}/services/postgresql
-      dockerfile: ${HUNCHO_DIR}/services/postgresql/build/Dockerfile
-      args:
-        POSTGRES_VERSION: 9.6
+    image: postgres:9.6
     volumes:
       - ${HUNCHO_DIR}/data/dev/sport_db/data:/var/lib/postgresql/data/
     env_file:
@@ -74,21 +53,6 @@ services:
       retries: 20
     networks:
       - app-net
-  sport_proxy:
-    container_name: sport_proxy
-    build:
-      context: ${HUNCHO_DIR}/services/sport/proxy
-      dockerfile: ${HUNCHO_DIR}/services/sport/proxy/build/Dockerfile
-    restart: on-failure
-    volumes:
-      - ${HUNCHO_DIR}/services/sport/statics/.:/usr/share/nginx/
-    ports:
-      - 80:80
-    depends_on:
-      - sport
-    networks:
-      - app-net
 networks:
-    app-net:
-        external:
-            name: build_app-net
+  app-net:
+    driver: bridge

@@ -6,17 +6,10 @@ from . import Base
 class Score(Base):
     def __init__(self):
         Base.__init__(self)
-        self.host = app.config['SCORE_HOST']
-        self.port = app.config['SCORE_PORT']
-        self.base_url = f'http://{self.host}:{self.port}'
+        self.base_url = app.config['SCORE_URL']
 
-    def get_contest(self, uuid, params=None):
-        url = f'{self.base_url}/contests/{uuid}'
-        res = self.get(url=url, params=params)
-        return res.json()
-
-    def get_contests(self, params=None):
-        url = f'{self.base_url}/contests'
+    def get_score(self, uuid, params=None):
+        url = f'{self.base_url}/scores/contest/{uuid}'
         res = self.get(url=url, params=params)
         return res.json()
 
