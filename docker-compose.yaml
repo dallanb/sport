@@ -3,9 +3,7 @@ version: "3.2"
 services:
   adminer:
     container_name: adminer
-    build:
-      context: ${HUNCHO_DIR}/services/adminer
-      dockerfile: ${HUNCHO_DIR}/services/adminer/build/Dockerfile
+    image: adminer:latest
     restart: always
     ports:
       - 8080:8080

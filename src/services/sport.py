@@ -2,7 +2,7 @@ import logging
 from .base import Base
 from ..external import Contest as ContestExternal, Score as ScoreExternal
 from ..models import Sport as SportModel
-from ..common.utils import get_sport_template
+from ..common.utils import get_sport_template, generate_uuid
 
 
 class Sport(Base):
@@ -39,5 +39,6 @@ class Sport(Base):
         sheet = []
         for participant in participants:
             sheet.append({**template})
+            sheet[len(sheet) - 1]['uuid'] = generate_uuid()
             sheet[len(sheet) - 1]['participant'] = participant
         return sheet
