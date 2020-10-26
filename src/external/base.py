@@ -23,6 +23,14 @@ class Base:
         return requests.post(url, data=data, json=json, files=files, headers=headers)
 
     @staticmethod
+    def put(**kwargs):
+        url = kwargs.get('url', None)
+        data = kwargs.get('data', None)
+        json = kwargs.get('json', None)
+        headers = kwargs.get('headers', None)
+        return requests.put(url, data=data, json=json, headers=headers)
+
+    @staticmethod
     def delete(**kwargs):
         url = kwargs.get('url', None)
         headers = kwargs.get('headers', None)

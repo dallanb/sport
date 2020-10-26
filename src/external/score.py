@@ -13,7 +13,7 @@ class Score(Base):
         res = self.get(url=url, params=params)
         return res.json()
 
-    def create_log(self, uuid, json):
-        url = f'{self.base_url}/scores/{uuid}/logs'
-        res = self.post(url=url, json=json)
+    def update_sheet(self, uuid, json):
+        url = f'{self.base_url}/scores/{uuid}'
+        res = self.put(url=url, json=json)
         return res.json()

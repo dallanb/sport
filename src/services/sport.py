@@ -31,7 +31,7 @@ class Sport(Base):
             sheet = self.generate_sheet(name=sports.items[0].name, participants=participants)
             score_res = self.score_external.get_score(uuid=contest["uuid"])
             score_uuid = score_res['data']['scores']['uuid']
-            _ = self.score_external.create_log(uuid=score_uuid, json={'sheet': sheet})
+            _ = self.score_external.update_sheet(uuid=score_uuid, json={'sheet': sheet})
 
     @staticmethod
     def generate_sheet(name, participants):
@@ -39,6 +39,6 @@ class Sport(Base):
         sheet = []
         for participant in participants:
             sheet.append({**template})
-            sheet[len(sheet) - 1]['uuid'] = generate_uuid()
+            sheet[len(sheet) - 1]['uuid'] = str(generate_uuid())
             sheet[len(sheet) - 1]['participant'] = participant
         return sheet
