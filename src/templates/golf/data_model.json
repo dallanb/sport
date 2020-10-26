@@ -2,6 +2,7 @@
   "uuid": null,
   "participant": null,
   "handicap": null,
+  "status": null,
   "holes": {
     "1": {
       "strokes": null
