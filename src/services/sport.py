@@ -21,7 +21,7 @@ class Sport(Base):
         return self.save(instance=sport)
 
     def handle_event(self, key, data):
-        if key == 'contest_ready':
+        if key == 'contest_active':
             # create a score log
             contest_res = self.contest_external.get_contest(uuid=data['uuid'],
                                                             params={'expand': 'sport', 'include': 'participants'})
