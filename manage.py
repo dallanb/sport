@@ -1,9 +1,9 @@
 import os
-from flask import g
+
 from flask.cli import FlaskGroup
-from src import app, db, cache
+
 from bin import init_sports
-import src
+from src import app, db, cache
 
 cli = FlaskGroup(app)
 
@@ -31,10 +31,8 @@ def clear_cache():
 
 
 def initialize_sports():
-    with app.app_context():
-        g.src = src
-        init_sports()
-        return
+    init_sports()
+    return
 
 
 @cli.command("init")
