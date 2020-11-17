@@ -14,6 +14,8 @@ inflect==4.1.0
 kafka-python==2.0.1
 marshmallow-sqlalchemy==0.23.0
 marshmallow_enum==1.5.1
+numpy==1.19.4
+pandas==1.1.4
 passlib==1.7.2
 psycopg2-binary==2.8.3
 pyJWT==1.7.1

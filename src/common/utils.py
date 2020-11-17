@@ -25,6 +25,10 @@ def camel_to_snake(s):
     return ''.join(['_' + c.lower() if c.isupper() else c for c in s]).lstrip('_')
 
 
+def get_sport_template_path(sport):
+    return os.path.join('src', 'templates', sport, 'data_model.json')
+
+
 def get_sport_template(sport):
     with open(os.path.join('src', 'templates', sport, 'data_model.json')) as f:
         return json.load(f)

@@ -12,6 +12,7 @@ class Config(object):
     KAFKA_URL = os.getenv("KAFKA_URL")
     KAFKA_TOPICS = os.getenv("KAFKA_TOPICS").split(",")
     CONTEST_URL = os.getenv("CONTEST_URL")
+    COURSE_URL = os.getenv("COURSE_URL")
     SCORE_URL = os.getenv("SCORE_URL")
     REDIS_CONFIG = {
         'CACHE_TYPE': 'redis',
