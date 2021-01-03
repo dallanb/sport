@@ -1,3 +1,5 @@
+import logging
+
 from .services import Sport
 
 
@@ -7,4 +9,8 @@ def new_event_listener(event):
     data = event.value
 
     if topic == 'contests':
-        Sport().handle_event(key=key, data=data)
+        try:
+            Sport().handle_event(key=key, data=data)
+        except Exception as ex:
+            print(ex)
+            logging.error("Sport event err")
