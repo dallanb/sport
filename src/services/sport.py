@@ -37,7 +37,7 @@ class Sport(Base):
                 location_res = self.course_external.get_course(uuid=contest['location_uuid'])
                 location = location_res['data']['courses']
 
-            participants = [participant['user_uuid'] for participant in contest['participants']]
+            participants = [participant['member_uuid'] for participant in contest['participants']]
             sheet = self.generate_sheet(name=sports.items[0].name, location=location, participants=participants)
             score_res = self.score_external.get_score(uuid=contest["uuid"])
             score_uuid = score_res['data']['scores']['uuid']
