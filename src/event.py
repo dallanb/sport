@@ -11,5 +11,6 @@ def new_event_listener(event):
     if topic == 'contests':
         try:
             Sport().handle_event(key=key, data=data)
-        except Exception:
+        except Exception as ex:
+            print(ex)
             logging.error("Sport event err")
