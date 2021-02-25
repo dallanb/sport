@@ -23,26 +23,6 @@ class Sport(Base):
         sport = self._init(model=self.sport_model, **kwargs)
         return self._save(instance=sport)
 
-    def handle_event(self, key, data):
-        if key == 'contest_ready':
-            # create a score log
-            contest_res = self.contest_external.get_contest(uuid=data['uuid'],
-                                                            params={'expand': 'sport', 'include': 'participants'})
-            contest = contest_res['data']['contests']
-            sports = self.find(uuid=contest['sport']['sport_uuid'])
-            sport = sports.items[0]
-
-            if sport.name == 'golf':
-                # this will need to be changed to be more general and not just for golf
-                location_res = self.course_external.get_course(uuid=contest['location_uuid'])
-                location = location_res['data']['courses']
-
-            participants = [participant['member_uuid'] for participant in contest['participants']]
-            sheet = self.generate_sheet(name=sports.items[0].name, location=location, participants=participants)
-            score_res = self.score_external.get_score(uuid=contest["uuid"])
-            score_uuid = score_res['data']['scores']['uuid']
-            _ = self.score_external.update_sheet(uuid=score_uuid, json={'sheet': sheet})
-
     def generate_sheet(self, name, location, participants):
         if name == 'golf':
             sheet = self.golf_service.transform_template(course=location, participants=participants)
