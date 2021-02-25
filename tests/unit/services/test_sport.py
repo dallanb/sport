@@ -181,3 +181,45 @@ def test_sport_create_w_bad_field(reset_db, pause_notification):
         _ = sport_service.create(name=pytest.sport_name, junk='junk')
     except ManualException as ex:
         assert ex.code == 500
+
+
+###########
+# Misc
+###########
+def test_fetch_contest(reset_db, pause_notification, mock_fetch_contest, seed_sport):
+    """
+    GIVEN 2 sport instances in the database
+    WHEN the fetch_contest method is called
+    THEN it should return a contest
+    """
+    contest = sport_service.fetch_contest(uuid=str(pytest.contest_uuid), params=None)
+    assert contest['uuid'] == str(pytest.contest_uuid)
+
+
+def test_fetch_course(reset_db, pause_notification, mock_fetch_course, seed_sport):
+    """
+    GIVEN 2 sport instances in the database
+    WHEN the fetch_course method is called
+    THEN it should return a course
+    """
+    course = sport_service.fetch_course(uuid=str(pytest.location_uuid), params=None)
+    assert course['uuid'] == str(pytest.location_uuid)
+
+
+def test_fetch_score(reset_db, pause_notification, mock_fetch_score, seed_sport):
+    """
+    GIVEN 2 sport instances in the database
+    WHEN the fetch_score method is called
+    THEN it should return a score
+    """
+    score = sport_service.fetch_score(uuid=str(pytest.contest_uuid), params=None)
+    assert score['uuid'] == str(pytest.score_uuid)
+
+
+def test_update_score(reset_db, pause_notification, mock_update_score, seed_sport):
+    """
+    GIVEN 2 sport instances in the database
+    WHEN the update_score method is called
+    THEN it should return True
+    """
+    assert sport_service.update_score(uuid=str(pytest.contest_uuid), sheet=None)
