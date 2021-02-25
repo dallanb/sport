@@ -10,7 +10,7 @@ cli = FlaskGroup(app)
 
 def full_load():
     os.system('flask seed run')
-    initialize_sports()
+    init_sports()
 
 
 def init_db():

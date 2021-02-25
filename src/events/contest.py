@@ -1,27 +1,15 @@
 import logging
-
-from .base import Base
-from .sports import Golf as GolfService
-from ..external import Contest as ContestExternal, Score as ScoreExternal, Course as CourseExternal
-from ..models import Sport as SportModel
+from src.external import Contest as ContestExternal, Course as CourseExternal, Score as ScoreExternal
+from src.services import SportService
 
 
-class Sport(Base):
+class Contest:
     def __init__(self):
-        Base.__init__(self)
         self.logger = logging.getLogger(__name__)
-        self.sport_model = SportModel
         self.contest_external = ContestExternal()
-        self.score_external = ScoreExternal()
         self.course_external = CourseExternal()
-        self.golf_service = GolfService()
-
-    def find(self, **kwargs):
-        return self._find(model=self.sport_model, **kwargs)
-
-    def create(self, **kwargs):
-        sport = self._init(model=self.sport_model, **kwargs)
-        return self._save(instance=sport)
+        self.score_external = ScoreExternal()
+        self.sport_service = SportService()
 
     def handle_event(self, key, data):
         if key == 'contest_ready':
@@ -29,7 +17,7 @@ class Sport(Base):
             contest_res = self.contest_external.get_contest(uuid=data['uuid'],
                                                             params={'expand': 'sport', 'include': 'participants'})
             contest = contest_res['data']['contests']
-            sports = self.find(uuid=contest['sport']['sport_uuid'])
+            sports = self.sport_service.find(uuid=contest['sport']['sport_uuid'])
             sport = sports.items[0]
 
             if sport.name == 'golf':
@@ -38,12 +26,8 @@ class Sport(Base):
                 location = location_res['data']['courses']
 
             participants = [participant['member_uuid'] for participant in contest['participants']]
-            sheet = self.generate_sheet(name=sports.items[0].name, location=location, participants=participants)
+            sheet = self.sport_service.generate_sheet(name=sports.items[0].name, location=location,
+                                                      participants=participants)
             score_res = self.score_external.get_score(uuid=contest["uuid"])
             score_uuid = score_res['data']['scores']['uuid']
             _ = self.score_external.update_sheet(uuid=score_uuid, json={'sheet': sheet})
-
-    def generate_sheet(self, name, location, participants):
-        if name == 'golf':
-            sheet = self.golf_service.transform_template(course=location, participants=participants)
-        return sheet
