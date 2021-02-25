@@ -1,6 +1,5 @@
 import pytest
 
-from src import services
 from src.common import DB, Cleaner
 from src.models import *
 from tests.helpers import generate_uuid
