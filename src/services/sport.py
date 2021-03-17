@@ -17,33 +17,51 @@ class Sport(Base):
         self.golf_service = GolfService()
 
     def find(self, **kwargs):
-        return Base.find(self, model=self.sport_model, **kwargs)
+        return self._find(model=self.sport_model, **kwargs)
 
     def create(self, **kwargs):
-        sport = self.init(model=self.sport_model, **kwargs)
-        return self.save(instance=sport)
-
-    def handle_event(self, key, data):
-        if key == 'contest_ready':
-            # create a score log
-            contest_res = self.contest_external.get_contest(uuid=data['uuid'],
-                                                            params={'expand': 'sport', 'include': 'participants'})
-            contest = contest_res['data']['contests']
-            sports = self.find(uuid=contest['sport']['sport_uuid'])
-            sport = sports.items[0]
-
-            if sport.name == 'golf':
-                # this will need to be changed to be more general and not just for golf
-                location_res = self.course_external.get_course(uuid=contest['location_uuid'])
-                location = location_res['data']['courses']
-
-            participants = [participant['member_uuid'] for participant in contest['participants']]
-            sheet = self.generate_sheet(name=sports.items[0].name, location=location, participants=participants)
-            score_res = self.score_external.get_score(uuid=contest["uuid"])
-            score_uuid = score_res['data']['scores']['uuid']
-            _ = self.score_external.update_sheet(uuid=score_uuid, json={'sheet': sheet})
+        sport = self._init(model=self.sport_model, **kwargs)
+        return self._save(instance=sport)
 
     def generate_sheet(self, name, location, participants):
         if name == 'golf':
             sheet = self.golf_service.transform_template(course=location, participants=participants)
         return sheet
+
+    def fetch_contest(self, uuid, params=None):
+        try:
+            res = self.contest_external.get_contest(uuid=uuid,
+                                                    params=params)
+            contest = res['data']['contests']
+            return contest
+        except TypeError:
+            self.logger.error('Contest fetch error')
+            return None
+
+    def fetch_course(self, uuid, params=None):
+        try:
+            res = self.course_external.get_course(uuid=uuid,
+                                                  params=params)
+            course = res['data']['courses']
+            return course
+        except TypeError:
+            self.logger.error('Course fetch error')
+            return None
+
+    def fetch_score(self, uuid, params=None):
+        try:
+            res = self.score_external.get_score(uuid=uuid,
+                                                params=params)
+            score = res['data']['scores']
+            return score
+        except TypeError:
+            self.logger.error('Score fetch error')
+            return None
+
+    def update_score(self, uuid, sheet):
+        try:
+            _ = self.score_external.update_sheet(uuid=uuid, json={'sheet': sheet})
+            return True
+        except TypeError:
+            self.logger.error('Score update error')
+            return None
