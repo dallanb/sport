@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from .events import Contest
 
@@ -12,5 +13,5 @@ def new_event_listener(event):
         try:
             Contest().handle_event(key=key, data=data)
         except Exception as ex:
-            print(ex)
+            logging.error(traceback.format_exc())
             logging.error("Contest event err")
